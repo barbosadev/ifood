@@ -130,6 +130,12 @@ function App() {
       <div className="container">
         <h1>Análise de Pedidos iFood 2025</h1>
         
+        <div className="github-link">
+          🔍 <a href="https://github.com/barbosadev/ifood" target="_blank" rel="noopener noreferrer">
+            Ver código-fonte no GitHub
+          </a> - Audite o código e garanta que não fazemos nada malicioso com seu token
+        </div>
+        
         <div className="tutorial-section">
           <h2>📖 Como obter seu Token de Autorização</h2>
           <p className="tutorial-intro">

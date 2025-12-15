@@ -16,8 +16,33 @@
 h1 {
   text-align: center;
   color: #333;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   font-size: 2.5rem;
+}
+
+.github-link {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-radius: 12px;
+  border: 2px solid #4caf50;
+  font-size: 1rem;
+  color: #2e7d32;
+  line-height: 1.6;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+}
+
+.github-link a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.github-link a:hover {
+  color: #0d47a1;
+  text-decoration: underline;
 }
 
 h2 {
