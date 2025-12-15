@@ -298,6 +298,48 @@ button:disabled {
   color: #888;
 }
 
+.share-section {
+  margin-top: 40px;
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.15);
+}
+
+.share-button {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  color: white;
+  padding: 18px 40px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  display: inline-block;
+  width: auto;
+  margin: 0 auto;
+}
+
+.share-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+}
+
+.share-button:active {
+  transform: translateY(-1px);
+}
+
+.share-note {
+  margin-top: 15px;
+  color: #2e7d32;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 20px;
@@ -309,5 +351,11 @@ button:disabled {
 
   .results {
     grid-template-columns: 1fr;
+  }
+  
+  .share-button {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.1rem;
   }
 }

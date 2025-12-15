@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './App.css';
 import { Analytics } from "@vercel/analytics/react"
 
@@ -7,6 +7,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
+  const resultsRef = useRef(null);
 
   const fetchDeliveries = async (bearerToken, page = 0) => {
     const myHeaders = new Headers();
@@ -126,6 +127,102 @@ function App() {
     }
   };
 
+  const generateImage = async () => {
+    if (!results) return;
+
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      
+      // Criar um container temporário para a imagem
+      const storyContainer = document.createElement('div');
+      storyContainer.style.width = '1080px';
+      storyContainer.style.height = '1920px';
+      storyContainer.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+      storyContainer.style.padding = '60px 40px';
+      storyContainer.style.boxSizing = 'border-box';
+      storyContainer.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+      storyContainer.style.position = 'fixed';
+      storyContainer.style.left = '-9999px';
+      storyContainer.style.top = '0';
+      storyContainer.style.display = 'flex';
+      storyContainer.style.alignItems = 'center';
+      storyContainer.style.justifyContent = 'center';
+      
+      storyContainer.innerHTML = `
+        <div style="background: white; border-radius: 30px; padding: 50px 40px; max-height: 60%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);">
+          <div>
+            <h1 style="text-align: center; color: #333; margin: 0 0 20px 0; font-size: 3.5rem; font-weight: 800;">
+              Meu iFood 2025 📊
+            </h1>
+            <p style="text-align: center; color: #666; margin: 0 0 50px 0; font-size: 1.5rem;">
+              Análise completa dos meus pedidos
+            </p>
+          </div>
+          
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 25px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 35px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              <div style="font-size: 2rem; color: rgba(255,255,255,0.9); margin-bottom: 10px; font-weight: 600;">💰 Gastei no total</div>
+              <div style="font-size: 5rem; font-weight: 900; color: white; margin: 10px 0;">R$ ${results.totalSpent}</div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+              <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="font-size: 1.6rem; color: rgba(255,255,255,0.95); margin-bottom: 8px; font-weight: 600;">📦 Pedidos</div>
+                <div style="font-size: 3.8rem; font-weight: 900; color: white;">${results.numberOfOrders}</div>
+              </div>
+              
+              <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="font-size: 1.6rem; color: rgba(255,255,255,0.95); margin-bottom: 8px; font-weight: 600;">📊 Média</div>
+                <div style="font-size: 3.2rem; font-weight: 900; color: white;">R$ ${results.averagePerOrder}</div>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+              <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(250, 112, 154, 0.3); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="font-size: 1.6rem; color: rgba(255,255,255,0.95); margin-bottom: 8px; font-weight: 600;">⬆️ Mais caro</div>
+                <div style="font-size: 3rem; font-weight: 900; color: white;">R$ ${results.mostExpensive.value}</div>
+              </div>
+              
+              <div style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(48, 207, 208, 0.3); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="font-size: 1.6rem; color: rgba(255,255,255,0.95); margin-bottom: 8px; font-weight: 600;">⬇️ Mais barato</div>
+                <div style="font-size: 3rem; font-weight: 900; color: white;">R$ ${results.cheapest.value}</div>
+              </div>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(168, 237, 234, 0.3); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              <div style="font-size: 1.8rem; color: #333; margin-bottom: 8px; font-weight: 600;">📅 Média mensal</div>
+              <div style="font-size: 3.5rem; font-weight: 900; color: #667eea;">${results.averageOrdersPerMonth} pedidos</div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 40px;">
+            <p style="font-size: 1.4rem; color: #888; margin: 0; font-weight: 600;">Gerado em www.retro-aifood.com</p>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(storyContainer);
+      
+      const canvas = await html2canvas(storyContainer, {
+        backgroundColor: null,
+        scale: 2,
+        logging: false,
+        width: 1080,
+        height: 1920,
+      });
+      
+      document.body.removeChild(storyContainer);
+      
+      const link = document.createElement('a');
+      link.download = `meu-ifood-2025.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      console.error('Erro ao gerar imagem:', err);
+      alert('Erro ao gerar imagem. Tente novamente.');
+    }
+  };
+
   return (
     <div className="App">
       <div className="container">
@@ -139,6 +236,9 @@ function App() {
         
         <div className="tutorial-section">
           <h2>📖 Como obter seu Token de Autorização</h2>
+          <p className="tutorial-intro">
+            <strong>⚠️ Importante: Este processo precisa ser feito no computador (não funciona em celulares).</strong>
+          </p>
           <p className="tutorial-intro">
             Siga os passos abaixo para copiar seu token de autorização do iFood:
           </p>
@@ -206,7 +306,7 @@ function App() {
         {results && (
           <>
             <h2>Resultados da Análise</h2>
-            <div className="results">
+            <div className="results" ref={resultsRef}>
               
               <div className="result-card">
                 <h3>💰 Gastos Totais</h3>
@@ -256,6 +356,15 @@ function App() {
                 <h3>📆 Média Diária de Gastos</h3>
                 <p className="big-number">R$ {results.averageDailySpending}</p>
               </div>
+            </div>
+            
+            <div className="share-section">
+              <button onClick={generateImage} className="share-button">
+                📸 Gerar Imagem para Compartilhar
+              </button>
+              <p className="share-note">
+                Clique no botão acima para salvar uma imagem com seus resultados e compartilhar nas redes sociais!
+              </p>
             </div>
           </>
         )}
